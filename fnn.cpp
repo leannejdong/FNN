@@ -6,17 +6,17 @@
 #include <algorithm>
 #include <fstream>
 #include <ctime>
-#include<stdio.h>
-#include<math.h>
-#include<stdlib.h>
-#include<ctype.h>
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+#include<cctype>
 
 time_t TicTime;
 time_t TocTime;
 
 
 
-using namespace::std;
+using namespace std;
 
 //Type declaratiobns
 using Layer = vector<double>;//for the different layers within the neural network
@@ -39,9 +39,6 @@ const double error_tolerance=0.2;//amount of error accepted during training
 const int MaxTime  = 2000; // Epochs
 
 const double MinTrain = 95.00; //stop if this value is reached in training performance
-
-
-
 
 class Layers{
 
@@ -76,7 +73,7 @@ protected:
     Data  InputValues;
     Data  DataSet;
     Data  OutputValues;
-    char* FileName;
+    string FileName;
     int Datapoints;
     int colSize ;
     int inputcolumnSize ;
@@ -90,7 +87,7 @@ public:
         //constructor
     } ;
     //overriden constructor
-    TrainingExamples( char* File, int size, int length, int inputsize, int outputsize ){
+    TrainingExamples( string File, int size, int length, int inputsize, int outputsize ){
         //initialize functions and class variables
         inputcolumnSize = inputsize ;
         outputcolumnSize = outputsize;
@@ -123,7 +120,6 @@ void TrainingExamples:: InitialiseData()
         for(int col = 0; col < colSize ; col++)
             DataSet[row].push_back(0);
     }
-    // cout<<"printing..."<<endl;
     for(  int row  = 0; row   < Datapoints ; row++)
         for( int col  = 0; col  < colSize; col ++)
             in>>DataSet[row ][col];
@@ -237,18 +233,18 @@ public:
 
     double SumSquaredError(TrainingExamples TraineeSamples,Sizes Layersize);
 
-    int BackPropogation(  TrainingExamples TraineeSamples, double LearningRate,Sizes Layersize,char* Savefile,bool load);
+    int BackPropogation(  TrainingExamples TraineeSamples, double LearningRate,Sizes Layersize, string Savefile,bool load);
 
-    void SaveLearnedData(Sizes Layersize,char* filename) ;
+    void SaveLearnedData(Sizes Layersize, string filename) ;
 
 
-    void LoadSavedData(Sizes Layersize,char* filename) ;
+    void LoadSavedData(Sizes Layersize, string filename) ;
 
-    double TestLearnedData(Sizes Layersize,char* filename,int  size, char* load,  int inputsize, int outputsize );
+    double TestLearnedData(Sizes Layersize, string filename,int  size, string load,  int inputsize, int outputsize );
 
-    double  CountLearningData(TrainingExamples TraineeSamples,int temp,Sizes Layersize);
+    double  CountLearningData(TrainingExamples TraineeSamples, int temp,Sizes Layersize);
 
-    double  TestTrainingData(Sizes Layersize, char* filename,int  size, char* load,  int inputsize, int outputsize , ofstream & out2 );
+    double  TestTrainingData(Sizes Layersize, string filename, int  size, string load,  int inputsize, int outputsize , ofstream & out2 );
 
     double CountTestingData(TrainingExamples TraineeSamples,int temp,Sizes Layersize);
 
@@ -386,7 +382,7 @@ void NeuralNetwork::ForwardPass(TrainingExamples TraineeSamples,int patternNum,S
 }
 
 
-void NeuralNetwork::BackwardPass(TrainingExamples TraineeSamp,double LearningRate,int patternNum,Sizes Layersize)
+void NeuralNetwork::BackwardPass(TrainingExamples TraineeSamp, double LearningRate,int patternNum,Sizes Layersize)
 {
     int end = Layersize.size() - 1;// know the end layer
     double temp = 0;
@@ -560,7 +556,7 @@ void NeuralNetwork::PrintWeights(Sizes Layersize)//output the values of all the 
 	--SaveLearnedData--
 	Save the network weights and bias values which were able to achieve optimal results to file
 */
-void NeuralNetwork::SaveLearnedData(Sizes Layersize, char* filename)//save data to file
+void NeuralNetwork::SaveLearnedData(Sizes Layersize, string filename)//save data to file
 {
 
     ofstream out;
@@ -596,7 +592,7 @@ void NeuralNetwork::SaveLearnedData(Sizes Layersize, char* filename)//save data 
 	--LoadSavedData--
 	Load the network weights and bias values which were able to achieve optimal results from file
 */
-void NeuralNetwork::LoadSavedData(Sizes Layersize,char* filename)//load saved data from file
+void NeuralNetwork::LoadSavedData(Sizes Layersize, string filename)//load saved data from file
 {
     ifstream in(filename);
     if(!in) {
@@ -784,7 +780,7 @@ bool NeuralNetwork::CheckOutput(TrainingExamples TraineeSamples,int pattern,Size
 	--TestTrainingData--
 	Test the trained network with testing data
 */
-double NeuralNetwork::TestTrainingData(Sizes Layersize, char* filename,int  size, char* load, int inputsize, int outputsize,ofstream & out2  )
+double NeuralNetwork::TestTrainingData(Sizes Layersize, string filename, int  size, string load, int inputsize, int outputsize, ofstream & out2  )
 {
     //variable declaration
     bool valid;
@@ -798,7 +794,7 @@ double NeuralNetwork::TestTrainingData(Sizes Layersize, char* filename,int  size
     //initialize network
     CreateNetwork(Layersize,Test);
     //load saved training data
-    LoadSavedData(Layersize,filename);
+    LoadSavedData(Layersize, filename);
 
     for(int pattern = 0;pattern < size ;pattern++){
 
@@ -808,7 +804,7 @@ double NeuralNetwork::TestTrainingData(Sizes Layersize, char* filename,int  size
     for(int pattern = 0; pattern< size; pattern++){
         for(int output = 0; output < Layersize[end]; output++) {
 
-            out2<< Output[pattern][output]   <<" "<<Test.OutputValues[pattern][output]<<" "<<fabs( fabs(Test.OutputValues[pattern][output] )-fabs    (Output[pattern][output]))<<endl;
+            out2<< Output[pattern][output] <<" "<<Test.OutputValues[pattern][output]<<" "<<fabs( fabs(Test.OutputValues[pattern][output] )-fabs    (Output[pattern][output]))<<endl;
 
         }
     }
@@ -826,7 +822,7 @@ double NeuralNetwork::TestTrainingData(Sizes Layersize, char* filename,int  size
 	--TestLearnedData--
 	Test the network using the training data
 */
-double NeuralNetwork::TestLearnedData(Sizes Layersize, char* filename,int  size, char* load, int inputsize, int outputsize )
+double NeuralNetwork::TestLearnedData(Sizes Layersize, string filename,int  size, string load, int inputsize, int outputsize )
 {
     //variable declaration
     bool valid;
@@ -857,7 +853,7 @@ double NeuralNetwork::TestLearnedData(Sizes Layersize, char* filename,int  size,
 
 }
 
-int NeuralNetwork::BackPropogation(  TrainingExamples TraineeSamples, double LearningRate,Sizes Layersize, char * Savefile, bool load)
+int NeuralNetwork::BackPropogation(  TrainingExamples TraineeSamples, double LearningRate,Sizes Layersize, string Savefile, bool load)
 {
     //variable declaration
     double SumErrorSquared;
@@ -908,12 +904,12 @@ int NeuralNetwork::BackPropogation(  TrainingExamples TraineeSamples, double Lea
 }
 
 
-int main(void)
+int main()
 {
 
-    char  * trainfile = "train.txt";// training data set
-    char * testfile= "test.txt"; //testing data set
-    char * saveknowledge = "learntweights.txt";
+    string trainfile = "train.txt";// training data set
+    string testfile= "test.txt"; //testing data set
+    string saveknowledge = "learntweights.txt";
     int trainsize = 138;
     int testsize = 41;
 
