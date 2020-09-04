@@ -1,6 +1,6 @@
 #include <iostream>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -26,8 +26,10 @@ using Frame = vector<double>;
 using Weight = vector<vector<double> >;//for managing the weights of the neural network connections-=-a vector matrix of type double
 using Data = vector<vector<double> > ;
 
-
-const int LayersNumber = 3; //total number of layers.  Can be more if you wish to have mroe than one hidden layer. Need to change topology in main if increase more than 1 hidden layer. i.e layer is 4, topology would be [input, hidden, hidden, output]
+/* total number of layers.  Can be more if you wish to have more than one hidden layer.
+ * Need to change topology in main if increase more than 1 hidden layer. i.e layer is 4,
+ * topology would be [input, hidden, hidden, output]*/
+const int LayersNumber = 3;
 
 //-----------------------
 const double alpha = 0.00001; //weight decay constant
@@ -56,10 +58,10 @@ protected:
 
 public:
     //functions
-    Layers()
-    {
-        //constructor method
-    }
+//    Layers()
+//    {
+//        //constructor method
+//    }
 
 };
 
