@@ -18,7 +18,7 @@ time_t TocTime;
 
 using namespace std;
 
-//Type declaratiobns
+//Type declarations
 using Layer = vector<double>;//for the different layers within the neural network
 using Nodes = vector<double>;//for the nodes within the network-- a vector matrix of type double.
 using Sizes = vector<int>; // Vector of Int
@@ -28,8 +28,6 @@ using Data = vector<vector<double> > ;
 
 
 const int LayersNumber = 3; //total number of layers.  Can be more if you wish to have mroe than one hidden layer. Need to change topology in main if increase more than 1 hidden layer. i.e layer is 4, topology would be [input, hidden, hidden, output]
-
-
 
 //-----------------------
 const double alpha = 0.00001; //weight decay constant
@@ -60,7 +58,7 @@ public:
     //functions
     Layers()
     {
-        //contructor method
+        //constructor method
     }
 
 };
@@ -177,9 +175,6 @@ void TrainingExamples:: printData()
         cout<<endl;
     }
 }
-
-
-
 
 class NeuralNetwork{
 
